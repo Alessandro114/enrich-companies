@@ -1,0 +1,36 @@
+{
+  "name": "enrich-companies",
+  "version": "1.0.0",
+  "description": "Enrich a CSV of companies with revenue, credit score, employees, and financial data from 272M+ companies. Free tier: 50 lookups/month.",
+  "main": "index.js",
+  "bin": {
+    "enrich-companies": "./index.js"
+  },
+  "keywords": [
+    "csv",
+    "enrichment",
+    "company data",
+    "business intelligence",
+    "lead enrichment",
+    "crm",
+    "revenue data",
+    "credit score",
+    "dun and bradstreet alternative",
+    "zoominfo alternative",
+    "clearbit alternative",
+    "data enrichment",
+    "b2b data",
+    "company lookup",
+    "sales intelligence"
+  ],
+  "author": "SCALA AI <ale@get-scala.com>",
+  "license": "MIT",
+  "homepage": "https://score.get-scala.com/api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alessandro114/enrich-csv"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
