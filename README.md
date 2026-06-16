@@ -7,6 +7,8 @@
 
 Enrich a CSV of companies with revenue, credit score, employees, and financial data. Powered by the [Score API](https://score.get-scala.com/api) — 250M+ companies from 40+ countries.
 
+![enrich-companies demo](demo.gif)
+
 ```bash
 npx enrich-companies leads.csv -o enriched.csv
 ```
