@@ -117,13 +117,25 @@ Found a bug? Want a feature? [Open an issue](https://github.com/Alessandro114/en
 
 Pull requests welcome — especially for new column auto-detection patterns and output format options.
 
+## Also available in Python
+
+```bash
+pip install enrich-companies
+enrich-companies companies.csv -o enriched.csv
+```
+
+Same tool, same API, zero dependencies. [enrich-companies on PyPI](https://pypi.org/project/enrich-companies/)
+
 ## Related
 
 - [Score API](https://score.get-scala.com/api) — Full REST API
-- [scala-score](https://www.npmjs.com/package/scala-score) — Node.js SDK
-- [scala-mcp-server](https://www.npmjs.com/package/scala-mcp-server) — MCP server for AI agents
+- [scala-score (npm)](https://www.npmjs.com/package/scala-score) — Node.js SDK
+- [scala-score (PyPI)](https://pypi.org/project/scala-score/) — Python SDK
+- [scala-mcp-server](https://www.npmjs.com/package/scala-mcp-server) — MCP server for AI agents (Claude, ChatGPT)
+- [Score Company Lookup](https://chromewebstore.google.com/detail/score-company-lookup/) — Chrome extension
 - [Dataset on Kaggle](https://www.kaggle.com/datasets/yorkiealfbroth/global-company-data-994k) — Free 994K sample
 - [Dataset on HuggingFace](https://huggingface.co/datasets/alf1990mi/global-company-database-1m) — Free 1M sample
+- [world-company-database](https://github.com/Alessandro114/world-company-database) — Full dataset repo
 
 ## License
 
