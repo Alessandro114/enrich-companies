@@ -1,7 +1,7 @@
 {
   "name": "enrich-companies",
   "version": "1.0.0",
-  "description": "Enrich a CSV of companies with revenue, credit score, employees, and financial data from 272M+ companies. Free tier: 50 lookups/month.",
+  "description": "Enrich a CSV of companies with revenue, credit score, employees, and financial data from 250M+ companies. Free tier: 50 lookups/month.",
   "main": "index.js",
   "bin": {
     "enrich-companies": "./index.js"
@@ -28,7 +28,7 @@
   "homepage": "https://score.get-scala.com/api",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Alessandro114/enrich-csv"
+    "url": "https://github.com/Alessandro114/enrich-companies"
   },
   "engines": {
     "node": ">=16"

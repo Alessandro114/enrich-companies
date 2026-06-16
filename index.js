@@ -10,11 +10,11 @@ const RATE_LIMIT_MS = 200;
 
 function usage() {
   console.log(`
-enrich-csv v${VERSION} — Enrich company data from 272M+ businesses
+enrich-companies v${VERSION} — Enrich company data from 250M+ businesses
 
 USAGE:
-  enrich-csv input.csv [options]
-  cat companies.csv | enrich-csv - [options]
+  enrich-companies input.csv [options]
+  cat companies.csv | enrich-companies - [options]
 
 OPTIONS:
   -o, --output FILE    Output file (default: stdout)
@@ -29,20 +29,13 @@ OPTIONS:
   -v, --version        Show version
 
 EXAMPLES:
-  enrich-csv leads.csv -o enriched.csv
-  enrich-csv leads.csv --country IT --key sk_live_xxx
-  enrich-csv leads.csv --column "Company Name" --fields revenue,score,grade
-  cat names.txt | enrich-csv - -o results.csv
+  enrich-companies leads.csv -o enriched.csv
+  enrich-companies leads.csv --country IT --key sk_live_xxx
+  enrich-companies leads.csv --column "Company Name" --fields revenue,score,grade
+  cat names.txt | enrich-companies - -o results.csv
 
 FREE TIER: 50 lookups/month (no key needed)
 Get API key: https://score.get-scala.com/api/free-key
-
-PRICING:
-  Free       50 lookups/month    €0
-  Starter   500 lookups/month   €19/mo
-  Growth  5,000 lookups/month   €49/mo
-  Enterprise 50,000 lookups/mo  €149/mo
-
 More info: https://score.get-scala.com/api
 `);
 }
@@ -139,7 +132,7 @@ function apiSearch(query, country, key, limit) {
     if (country) url += `&country=${country}`;
     if (key) url += `&key=${key}`;
 
-    https.get(url, { headers: { 'User-Agent': `enrich-csv/${VERSION}` } }, (res) => {
+    https.get(url, { headers: { 'User-Agent': `enrich-companies/${VERSION}` } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
@@ -272,7 +265,7 @@ async function main() {
   }
 
   process.stderr.write(`\n--- Score API by SCALA AI ---\n`);
-  process.stderr.write(`272M+ companies | 265 countries | Free tier available\n`);
+  process.stderr.write(`250M+ companies | 40+ countries | Free tier available\n`);
   process.stderr.write(`https://score.get-scala.com/api\n\n`);
 }
 

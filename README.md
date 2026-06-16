@@ -1,57 +1,79 @@
-# enrich-csv
+# enrich-companies
 
-Enrich a CSV of companies with revenue, credit score, employees, and financial data. Powered by the [Score API](https://score.get-scala.com/api) — 272M+ companies from 265 countries.
+[![npm version](https://img.shields.io/npm/v/enrich-companies.svg)](https://www.npmjs.com/package/enrich-companies)
+[![npm downloads](https://img.shields.io/npm/dm/enrich-companies.svg)](https://www.npmjs.com/package/enrich-companies)
+[![license](https://img.shields.io/npm/l/enrich-companies.svg)](https://github.com/Alessandro114/enrich-companies/blob/master/LICENSE)
+[![node version](https://img.shields.io/node/v/enrich-companies.svg)](https://nodejs.org)
 
-**The Clearbit / ZoomInfo / D&B alternative that costs €0 to start.**
-
-## Quick Start
+Enrich a CSV of companies with revenue, credit score, employees, and financial data. Powered by the [Score API](https://score.get-scala.com/api) — 250M+ companies from 40+ countries.
 
 ```bash
-npx enrich-csv leads.csv -o enriched.csv
+npx enrich-companies leads.csv -o enriched.csv
 ```
 
 That's it. No signup needed. Free tier: 50 lookups/month.
 
+## Why?
+
+ZoomInfo costs $15,000/yr. Clearbit is dead. D&B charges per lookup. This tool is free for 50 lookups/month.
+
+| | enrich-companies | ZoomInfo | Clearbit | D&B |
+|---|---|---|---|---|
+| Price to start | **$0** | $15,000/yr | Shut down | Per-lookup |
+| Company records | **250M+** | ~100M | Was ~44M | ~500M |
+| Signup required | **No** | Yes | N/A | Yes |
+| Self-hosted option | **Yes** | No | N/A | No |
+| Open source | **Yes** | No | No | No |
+
+## How It Works
+
+1 command. 0 dependencies. Calls the [Score API](https://score.get-scala.com/api) (250M+ companies, 40+ countries). No signup needed.
+
+1. You pass a CSV with a column of company names
+2. Each name is looked up against the Score database
+3. Matched records are appended as new columns to your CSV
+4. Output goes to a file or stdout
+
 ## Installation
 
 ```bash
-npm install -g enrich-csv
+npm install -g enrich-companies
 ```
 
 Or use directly with `npx` (no install needed):
 
 ```bash
-npx enrich-csv input.csv -o output.csv
+npx enrich-companies input.csv -o output.csv
 ```
 
 ## Usage
 
 ```bash
 # Basic: enrich a CSV file
-enrich-csv companies.csv -o enriched.csv
+enrich-companies companies.csv -o enriched.csv
 
 # Filter by country
-enrich-csv leads.csv --country IT -o italian-leads.csv
+enrich-companies leads.csv --country IT -o italian-leads.csv
 
 # Specify which column contains company names
-enrich-csv data.csv --column "Company Name" -o enriched.csv
+enrich-companies data.csv --column "Company Name" -o enriched.csv
 
 # Choose which fields to add
-enrich-csv leads.csv --fields revenue,score,grade,employees -o enriched.csv
+enrich-companies leads.csv --fields revenue,score,grade,employees -o enriched.csv
 
 # Use with API key for higher limits
-enrich-csv leads.csv -k sk_live_your_key -o enriched.csv
+enrich-companies leads.csv -k sk_live_your_key -o enriched.csv
 
 # Pipe from stdin
-cat companies.txt | enrich-csv - -o results.csv
+cat companies.txt | enrich-companies - -o results.csv
 
 # Dry run (see what would be enriched)
-enrich-csv leads.csv --dry-run
+enrich-companies leads.csv --dry-run
 ```
 
 ## What Gets Added
 
-For each company in your CSV, enrich-csv adds:
+For each company in your CSV, enrich-companies adds:
 
 | Field | Description |
 |-------|-------------|
@@ -81,22 +103,17 @@ Ferrero,Maria,maria@ferrero.com,19300000000,48697,75,BBB,IT,Alba,Food Manufactur
 SAP,Hans,hans@sap.com,35000000000,107000,88,A,DE,Walldorf,Software Publishing
 ```
 
-## API Pricing
-
-| Plan | Lookups/month | Price |
-|------|--------------|-------|
-| Free | 50 | €0 |
-| Starter | 500 | €19/mo |
-| Growth | 5,000 | €49/mo |
-| Enterprise | 50,000 | €149/mo |
-
-Get your free API key: https://score.get-scala.com/api/free-key
-
 ## Data Coverage
 
-272,116,630 companies across 265 countries. Top coverage:
+250M+ companies across 40+ countries. Top coverage:
 
-🇧🇷 Brazil 47M · 🇺🇸 USA 39M · 🇦🇺 Australia 20M · 🇫🇷 France 17M · 🇬🇧 UK 14M · 🇩🇪 Germany 10M · 🇮🇳 India 8M · 🇯🇵 Japan 7M · 🇮🇹 Italy 6M · 🇪🇸 Spain 5M
+Brazil 47M | USA 39M | Australia 20M | France 17M | UK 14M | Germany 10M | India 8M | Japan 7M | Italy 6M | Spain 5M
+
+## Contributing
+
+Found a bug? Want a feature? [Open an issue](https://github.com/Alessandro114/enrich-companies/issues).
+
+Pull requests welcome — especially for new column auto-detection patterns and output format options.
 
 ## Related
 
