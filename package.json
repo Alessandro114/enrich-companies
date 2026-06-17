@@ -6,6 +6,9 @@
   "bin": {
     "enrich-companies": "./index.js"
   },
+  "scripts": {
+    "test": "node --test"
+  },
   "keywords": [
     "csv",
     "enrichment",
