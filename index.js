@@ -126,11 +126,16 @@ function detectNameColumn(headers) {
   return 0;
 }
 
+function buildApiUrl(query, country, key, limit) {
+  let url = `${API_BASE}?q=${encodeURIComponent(query)}&limit=${limit}`;
+  if (country) url += `&country=${country}`;
+  if (key) url += `&key=${key}`;
+  return url;
+}
+
 function apiSearch(query, country, key, limit) {
   return new Promise((resolve, reject) => {
-    let url = `${API_BASE}?q=${encodeURIComponent(query)}&limit=${limit}`;
-    if (country) url += `&country=${country}`;
-    if (key) url += `&key=${key}`;
+    const url = buildApiUrl(query, country, key, limit);
 
     https.get(url, { headers: { 'User-Agent': `enrich-companies/${VERSION}` } }, (res) => {
       let data = '';
@@ -269,4 +274,14 @@ async function main() {
   process.stderr.write(`https://score.get-scala.com/api\n\n`);
 }
 
-main().catch(e => { console.error(`Fatal: ${e.message}`); process.exit(1); });
+if (require.main === module) {
+  main().catch(e => { console.error(`Fatal: ${e.message}`); process.exit(1); });
+}
+
+module.exports = {
+  buildApiUrl,
+  detectDelimiter,
+  detectNameColumn,
+  formatRevenue,
+  parseCSVLine,
+};
