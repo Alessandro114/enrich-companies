@@ -63,6 +63,9 @@ enrich-companies data.csv --column "Company Name" -o enriched.csv
 # Choose which fields to add
 enrich-companies leads.csv --fields revenue,score,grade,employees -o enriched.csv
 
+# Output enriched rows as JSON
+enrich-companies leads.csv --format json -o enriched.json
+
 # Use with API key for higher limits
 enrich-companies leads.csv -k sk_live_your_key -o enriched.csv
 
