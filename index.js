@@ -22,6 +22,7 @@ OPTIONS:
   -c, --column NAME    Column name containing company names (default: auto-detect)
   --country CC         Filter by ISO country code (e.g., IT, US, DE)
   --delimiter CHAR     CSV delimiter (default: auto-detect , or ;)
+  --format FORMAT      Output format: csv or json (default: csv)
   --limit N            Max results per lookup (default: 1)
   --fields FIELDS      Fields to add (default: revenue,employees,score,grade,country,city,sector_desc)
   --dry-run            Show what would be enriched without calling API
@@ -31,6 +32,7 @@ OPTIONS:
 EXAMPLES:
   enrich-companies leads.csv -o enriched.csv
   enrich-companies leads.csv --country IT --key sk_live_xxx
+  enrich-companies leads.csv --format json -o enriched.json
   enrich-companies leads.csv --column "Company Name" --fields revenue,score,grade
   cat names.txt | enrich-companies - -o results.csv
 
@@ -49,6 +51,7 @@ function parseArgs() {
     column: null,
     country: null,
     delimiter: null,
+    format: 'csv',
     limit: 1,
     fields: ['revenue', 'employees', 'score', 'grade', 'country', 'city', 'sector_desc'],
     dryRun: false,
@@ -63,6 +66,7 @@ function parseArgs() {
     if (a === '-c' || a === '--column') { opts.column = args[++i]; continue; }
     if (a === '--country') { opts.country = args[++i]; continue; }
     if (a === '--delimiter') { opts.delimiter = args[++i]; continue; }
+    if (a === '--format') { opts.format = args[++i]; continue; }
     if (a === '--limit') { opts.limit = parseInt(args[++i], 10); continue; }
     if (a === '--fields') { opts.fields = args[++i].split(','); continue; }
     if (a === '--dry-run') { opts.dryRun = true; continue; }
@@ -70,6 +74,12 @@ function parseArgs() {
   }
 
   return opts;
+}
+
+function validateFormat(format) {
+  if (format === 'csv' || format === 'json') return format;
+  console.error(`Error: unsupported format "${format}". Use "csv" or "json".`);
+  process.exit(1);
 }
 
 function detectDelimiter(line) {
@@ -109,6 +119,14 @@ function escapeCSV(val, delimiter) {
     return '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
+}
+
+function rowToObject(headers, row) {
+  const obj = {};
+  headers.forEach((header, idx) => {
+    obj[header] = row[idx] != null ? row[idx] : '';
+  });
+  return obj;
 }
 
 function detectNameColumn(headers) {
@@ -163,6 +181,7 @@ function formatRevenue(val) {
 
 async function main() {
   const opts = parseArgs();
+  opts.format = validateFormat(opts.format);
 
   if (!opts.input) {
     console.error('Error: no input file specified. Use --help for usage.');
@@ -201,6 +220,7 @@ async function main() {
 
   const enrichedHeaders = [...headers, ...opts.fields.map(f => `score_${f}`)];
   const outputLines = [enrichedHeaders.map(h => escapeCSV(h, delimiter)).join(delimiter)];
+  const outputObjects = [];
 
   const total = lines.length - 1;
   let enriched = 0;
@@ -220,6 +240,7 @@ async function main() {
     if (!companyName || !companyName.trim()) {
       const emptyRow = [...row, ...opts.fields.map(() => '')];
       outputLines.push(emptyRow.map(v => escapeCSV(v, delimiter)).join(delimiter));
+      outputObjects.push(rowToObject(enrichedHeaders, emptyRow));
       continue;
     }
 
@@ -229,6 +250,7 @@ async function main() {
       process.stderr.write('(dry run)\n');
       const emptyRow = [...row, ...opts.fields.map(() => '')];
       outputLines.push(emptyRow.map(v => escapeCSV(v, delimiter)).join(delimiter));
+      outputObjects.push(rowToObject(enrichedHeaders, emptyRow));
       continue;
     }
 
@@ -242,18 +264,22 @@ async function main() {
       });
       const enrichedRow = [...row, ...enrichedValues];
       outputLines.push(enrichedRow.map(v => escapeCSV(v, delimiter)).join(delimiter));
+      outputObjects.push(rowToObject(enrichedHeaders, enrichedRow));
       process.stderr.write(`✓ ${result.name} (${result.country}) rev=${formatRevenue(result.revenue)}\n`);
     } else {
       notFound++;
       const emptyRow = [...row, ...opts.fields.map(() => '')];
       outputLines.push(emptyRow.map(v => escapeCSV(v, delimiter)).join(delimiter));
+      outputObjects.push(rowToObject(enrichedHeaders, emptyRow));
       process.stderr.write('✗ not found\n');
     }
 
     await sleep(RATE_LIMIT_MS);
   }
 
-  const output = outputLines.join('\n') + '\n';
+  const output = opts.format === 'json'
+    ? JSON.stringify(outputObjects, null, 2) + '\n'
+    : outputLines.join('\n') + '\n';
 
   if (opts.output) {
     fs.writeFileSync(opts.output, output, 'utf-8');
